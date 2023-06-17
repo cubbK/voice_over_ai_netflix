@@ -1,0 +1,4 @@
+speechbrain
+resampy
+pytest
+pytest-timeout
