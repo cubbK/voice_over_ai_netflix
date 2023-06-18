@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Voice Over AI Netflix",
+  "version": "1.0",
+  "description": "",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["<all_urls>", "webRequest"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.netflix.com/watch/*"],
+      "js": ["/content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inject.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
