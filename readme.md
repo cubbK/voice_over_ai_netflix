@@ -4,6 +4,12 @@ I want to watch Swedish dubbed movies but there aren't that many that are not fo
 
 it reminds me of when in childhood a lot of movies I watched were dubbed by a single person with a bad mic in a basement.
 
+
+
+https://github.com/cubbK/voice_over_ai_netflix/assets/3717949/253bb994-b97c-4a48-a4a2-2fe66b53402d
+
+
+
 ## How it works
 
 [Coqui](https://github.com/coqui-ai/TTS) is used as a language model and I forked [neon-tts-plugin-coqui](https://github.com/NeonGeckoCom/neon-tts-plugin-coqui) that already had a server working.
