@@ -86,16 +86,24 @@ function startPlayAudio(video) {
     if (subtitles[matchingSubtitleIndex]) {
       subtitles[matchingSubtitleIndex].played = true;
       console.log(subtitles[matchingSubtitleIndex].text);
+
+      const timeLimit = subtitles[matchingSubtitleIndex + 1]
+        ? subtitles[matchingSubtitleIndex + 1].begin -
+          subtitles[matchingSubtitleIndex].begin
+        : subtitles[matchingSubtitleIndex].end -
+          subtitles[matchingSubtitleIndex].begin;
+
       fetchAndPlayWavFile(
         `http://localhost:9666/synthesize/${encodeURIComponent(
           subtitles[matchingSubtitleIndex].text
-        )}`
+        )}`,
+        timeLimit
       );
     }
   });
 }
 
-function fetchAndPlayWavFile(url) {
+function fetchAndPlayWavFile(url, timeLimit) {
   fetch(url)
     .then(function (response) {
       if (!response.ok) {
@@ -113,8 +121,17 @@ function fetchAndPlayWavFile(url) {
       // Set the Blob as the source of the Audio element
       audio.src = URL.createObjectURL(blob);
 
+      audio.addEventListener("loadedmetadata", function () {
+        // Access the duration property of the audio element
+        const duration = audio.duration;
+
+        if (duration > timeLimit) {
+          audio.playbackRate = duration / timeLimit + 0.05;
+        }
+        audio.play();
+      });
+
       // Play the audio
-      audio.play();
     })
     .catch(function (error) {
       console.error("Error:", error);
