@@ -1,7 +1,6 @@
 console.log("Started 'Voice Over AI Netflix' extension.");
 
 let subtitles = [];
-let subtitleAudios = [];
 
 function waitForElm(selector) {
   return new Promise((resolve) => {
@@ -35,7 +34,7 @@ s.onload = function () {
 (document.head || document.documentElement).appendChild(s);
 
 // this should happen before video is loader
-document.addEventListener("yourCustomEvent", function (e) {
+document.addEventListener("InterceptedSubtitles", function (e) {
   const data = e.detail;
 
   const xmlStr = data;
@@ -85,13 +84,23 @@ function startPlayAudio(video) {
     // Log the subtitle if found
     if (subtitles[matchingSubtitleIndex]) {
       subtitles[matchingSubtitleIndex].played = true;
-      console.log(subtitles[matchingSubtitleIndex].text);
 
       const timeLimit = subtitles[matchingSubtitleIndex + 1]
         ? subtitles[matchingSubtitleIndex + 1].begin -
           subtitles[matchingSubtitleIndex].begin
         : subtitles[matchingSubtitleIndex].end -
           subtitles[matchingSubtitleIndex].begin;
+
+      console.log({
+        matchingSubtitleIndex,
+        currentTime,
+        subtitleText: subtitles[matchingSubtitleIndex].text,
+        subtitle: subtitles[matchingSubtitleIndex],
+        subtitleIndexByText: subtitles.findIndex(
+          (subtitle) => subtitle.text === subtitles[matchingSubtitleIndex].text
+        ),
+        subtitles,
+      });
 
       fetchAndPlayWavFile(
         `http://localhost:9666/synthesize/${encodeURIComponent(

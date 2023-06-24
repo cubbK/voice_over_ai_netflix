@@ -1,5 +1,6 @@
 console.log("Script Injected");
 (function (xhr) {
+  var alreadyIndercepted = false;
   var XHR = XMLHttpRequest.prototype;
   var open = XHR.open;
   var send = XHR.send;
@@ -20,11 +21,16 @@ console.log("Script Injected");
       var endTime = new Date().toISOString();
       var myUrl = this._url ? this._url.toLowerCase() : this._url;
       if (myUrl) {
-        if (myUrl.indexOf("?o=1") !== -1 && myUrl.indexOf("/range/") === -1) {
-          console.log("InterceptedL: ", myUrl);
+        if (
+          myUrl.indexOf("?o=1") !== -1 &&
+          myUrl.indexOf("/range/") === -1 &&
+          !alreadyIndercepted
+        ) {
+          console.log("Intercepted: ", myUrl);
+          alreadyIndercepted = true; // fixes some strange bug where it intercepts again in the middle of the movie and breaks the timing
           var responseData = this.response;
           document.dispatchEvent(
-            new CustomEvent("yourCustomEvent", {
+            new CustomEvent("InterceptedSubtitles", {
               url: myUrl,
               detail: responseData,
             })
